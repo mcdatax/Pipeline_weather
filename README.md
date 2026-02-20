@@ -2,18 +2,14 @@
 
 # 🌤️ Pipeline Weather
 
-### Pipeline automatizado de datos meteorológicos
-*Extracción, transformación y análisis de datos climáticos en tiempo real*
+### Alertas automáticas de lluvia vía SMS
+*Sistema de notificaciones meteorológicas usando WeatherAPI y Twilio*
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Active-success)](https://github.com/mcdatax/Pipeline_weather)
+[![Twilio](https://img.shields.io/badge/Twilio-SMS-red?logo=twilio&logoColor=white)](https://www.twilio.com/)
+[![WeatherAPI](https://img.shields.io/badge/WeatherAPI-Free-orange)](https://www.weatherapi.com/)
 
-[Características](#-características) •
-[Tecnologías](#️-tecnologías) •
-[Instalación](#-instalación) •
-[Uso](#-uso) •
-[Arquitectura](#-arquitectura)
+[Características](#-características) • [Instalación](#-instalación) • [Uso](#-uso) • [Configuración](#️-configuración)
 
 </div>
 
@@ -21,47 +17,35 @@
 
 ## 📋 Descripción
 
-**Pipeline Weather** es un sistema ETL (Extract, Transform, Load) automatizado para la recolección, procesamiento y análisis de datos meteorológicos en tiempo real. El proyecto extrae información de APIs públicas de clima, procesa los datos y los almacena de forma estructurada para análisis posteriores y visualización.
+**Pipeline Weather** es un script de Python que consulta el pronóstico del clima de una ciudad y envía alertas SMS cuando se pronostica lluvia durante el día. Utiliza la API gratuita de WeatherAPI para obtener datos meteorológicos y Twilio para enviar notificaciones a tu teléfono móvil.
 
 ### 🎯 Objetivo
 
-Proporcionar una solución completa y escalable para:
-- **Extracción** automatizada de datos meteorológicos de múltiples fuentes
-- **Transformación** y limpieza de datos en formatos consistentes
-- **Almacenamiento** eficiente en bases de datos para análisis históricos
-- **Visualización** de tendencias y patrones climáticos
+Recibir alertas automáticas por SMS con las horas exactas en que se pronostica lluvia, para que puedas planificar tu día y no olvidar el paraguas.
 
 ---
 
 ## ✨ Características
 
-- 🔄 **Pipeline ETL Automatizado**: Extracción programada de datos cada hora
-- 🌍 **Multi-ubicación**: Recolección de datos de múltiples ciudades simultáneamente
-- 📊 **Transformación de Datos**: Limpieza, validación y estandarización
-- 💾 **Almacenamiento Persistente**: Base de datos relacional optimizada
-- 📈 **Visualización**: Dashboards interactivos con métricas clave
-- ⚡ **Procesamiento en Tiempo Real**: Actualizaciones continuas
-- 🔔 **Alertas**: Notificaciones ante condiciones climáticas extremas
-- 📝 **Logging Completo**: Trazabilidad de todas las operaciones
+- 🌧️ **Detección de lluvia**: Identifica automáticamente las horas con pronóstico de lluvia
+- 📱 **Alertas SMS**: Envía notificaciones a tu teléfono móvil
+- ⏰ **Horario inteligente**: Solo alerta sobre lluvia entre las 6 AM y 10 PM
+- 🌍 **Cualquier ciudad**: Configurable para consultar cualquier ubicación
+- 📊 **Procesamiento con Pandas**: Organiza y filtra datos meteorológicos
+- 🎨 **Interfaz amigable**: Barra de progreso con tqdm
 
 ---
 
 ## 🛠️ Tecnologías
 
-<div align="center">
-
-| Categoría | Tecnologías |
-|-----------|-------------|
+| Componente | Tecnología |
+|-----------|------------|
 | **Lenguaje** | Python 3.8+ |
-| **Orquestación** | Apache Airflow / Prefect |
-| **APIs** | OpenWeatherMap API, WeatherAPI |
-| **Base de Datos** | PostgreSQL / MySQL |
-| **Procesamiento** | Pandas, NumPy |
-| **Visualización** | Matplotlib, Plotly, Grafana |
-| **Contenedores** | Docker, Docker Compose |
-| **Control de Versiones** | Git, GitHub |
-
-</div>
+| **API Clima** | WeatherAPI (gratuita) |
+| **SMS** | Twilio |
+| **Procesamiento** | Pandas |
+| **HTTP** | Requests |
+| **Variables de entorno** | python-dotenv |
 
 ---
 
@@ -70,40 +54,11 @@ Proporcionar una solución completa y escalable para:
 ```
 Pipeline_weather/
 │
-├── dags/                       # DAGs de Airflow
-│   ├── weather_etl_dag.py     # Pipeline principal
-│   └── config/                # Configuraciones
-│
-├── src/                       # Código fuente
-│   ├── extract/              # Módulos de extracción
-│   │   ├── api_client.py     # Cliente API
-│   │   └── data_fetcher.py   # Extractor de datos
-│   │
-│   ├── transform/            # Módulos de transformación
-│   │   ├── cleaner.py        # Limpieza de datos
-│   │   └── validator.py      # Validación
-│   │
-│   └── load/                 # Módulos de carga
-│       ├── db_loader.py      # Carga a DB
-│       └── storage.py        # Almacenamiento
-│
-├── database/                  # Scripts de base de datos
-│   ├── schema.sql            # Esquema de tablas
-│   └── migrations/           # Migraciones
-│
-├── notebooks/                 # Jupyter notebooks
-│   └── analysis.ipynb        # Análisis exploratorio
-│
-├── tests/                     # Tests unitarios
-│   └── test_pipeline.py
-│
-├── config/                    # Configuraciones
-│   ├── config.yaml           # Configuración general
-│   └── cities.json           # Ciudades a monitorear
-│
-├── docker-compose.yml         # Orquestación Docker
-├── requirements.txt           # Dependencias Python
-├── .env.example              # Variables de entorno
+├── twilio_script.py          # Script principal
+├── utils.py                  # Funciones auxiliares
+├── twilio_config.py          # Configuración y credenciales
+├── requirements.txt          # Dependencias del proyecto
+├── .env                      # Variables de entorno (no incluido)
 └── README.md                 # Este archivo
 ```
 
@@ -113,10 +68,14 @@ Pipeline_weather/
 
 ### Prerrequisitos
 
-- Python 3.8 o superior
-- Docker y Docker Compose
-- API Key de OpenWeatherMap (gratuita)
-- PostgreSQL 13+ (o usar Docker)
+1. **Python 3.8 o superior**
+2. **Cuenta Twilio** (gratuita para pruebas)
+   - Regístrate en [twilio.com](https://www.twilio.com/try-twilio)
+   - Obtén tu Account SID y Auth Token
+   - Obtén un número de teléfono Twilio
+3. **API Key de WeatherAPI** (gratuita)
+   - Regístrate en [weatherapi.com](https://www.weatherapi.com/)
+   - Obtén tu API key gratuita
 
 ### Pasos de Instalación
 
@@ -126,7 +85,7 @@ git clone https://github.com/mcdatax/Pipeline_weather.git
 cd Pipeline_weather
 ```
 
-2. **Crear entorno virtual**
+2. **Crear entorno virtual** (recomendado)
 ```bash
 python -m venv venv
 source venv/bin/activate  # En Windows: venv\Scripts\activate
@@ -138,209 +97,172 @@ pip install -r requirements.txt
 ```
 
 4. **Configurar variables de entorno**
-```bash
-cp .env.example .env
-# Editar .env con tus credenciales
-```
 
-5. **Configurar base de datos**
-```bash
-# Si usas Docker
-docker-compose up -d postgres
+Crea un archivo `.env` en la raíz del proyecto:
 
-# Ejecutar migraciones
-python database/init_db.py
-```
+```env
+# Credenciales de Twilio
+TWILIO_ACCOUNT_SID=tu_account_sid_aqui
+TWILIO_AUTH_TOKEN=tu_auth_token_aqui
+TWILIO_PHONE_NUMBER=+1234567890
 
-6. **Iniciar el pipeline**
-```bash
-# Con Docker
-docker-compose up -d
+# API Key de WeatherAPI
+API_KEY_WAPI=tu_api_key_aqui
 
-# O manualmente
-airflow db init
-airflow webserver -p 8080
-airflow scheduler
+# Número de destino (tu teléfono)
+PHONE_NUMBER_DESTINATION=+34612345678
 ```
 
 ---
 
 ## 💻 Uso
 
-### Configuración Básica
+### Ejecución básica
 
-1. **Obtener API Key**
-   - Regístrate en [OpenWeatherMap](https://openweathermap.org/api)
-   - Copia tu API key al archivo `.env`
-
-2. **Configurar ciudades**
-   - Edita `config/cities.json` con las ubicaciones deseadas:
-   ```json
-   {
-     "cities": [
-       {"name": "Madrid", "lat": 40.4168, "lon": -3.7038},
-       {"name": "Barcelona", "lat": 41.3851, "lon": 2.1734}
-     ]
-   }
-   ```
-
-3. **Ejecutar el pipeline**
 ```bash
-# Ejecución manual
-python src/main.py
-
-# Con Airflow (automático)
-# Accede a http://localhost:8080 y activa el DAG
+python twilio_script.py
 ```
 
-### Consultas a la Base de Datos
+### Cambiar la ciudad
 
-```sql
--- Ver últimas lecturas
-SELECT * FROM weather_data 
-ORDER BY timestamp DESC 
-LIMIT 10;
-
--- Temperatura promedio por ciudad
-SELECT city, AVG(temperature) as avg_temp
-FROM weather_data
-WHERE timestamp > NOW() - INTERVAL '24 HOURS'
-GROUP BY city;
-```
-
----
-
-## 🏗️ Arquitectura
-
-```
-┌─────────────────┐
-│   APIs Clima    │
-│  (OpenWeather)  │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│   Extracción    │
-│  (API Client)   │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Transformación │
-│ (Limpieza/Val.) │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│      Carga      │
-│   (PostgreSQL)  │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Visualización  │
-│   (Dashboard)   │
-└─────────────────┘
-```
-
-### Flujo del Pipeline
-
-1. **Extracción**: Consulta APIs cada hora para obtener datos actuales
-2. **Validación**: Verifica integridad y calidad de datos
-3. **Transformación**: Normaliza unidades y formatos
-4. **Carga**: Almacena en PostgreSQL con timestamps
-5. **Análisis**: Genera métricas y alertas automáticas
-
----
-
-## 📊 Datos Recolectados
-
-El pipeline extrae las siguientes métricas:
-
-| Métrica | Descripción | Unidad |
-|---------|-------------|--------|
-| Temperatura | Temperatura actual | °C |
-| Sensación Térmica | Temperatura percibida | °C |
-| Humedad | Humedad relativa | % |
-| Presión | Presión atmosférica | hPa |
-| Velocidad del Viento | Velocidad del viento | m/s |
-| Dirección del Viento | Dirección en grados | ° |
-| Nubosidad | Cobertura de nubes | % |
-| Precipitación | Lluvia en última hora | mm |
-| Visibilidad | Distancia de visibilidad | metros |
-| Índice UV | Radiación ultravioleta | 0-11+ |
-
----
-
-## 🔍 Ejemplos de Análisis
-
-### Análisis de Temperatura
+Edita el archivo `twilio_script.py`:
 
 ```python
-import pandas as pd
-from src.analytics import WeatherAnalyzer
-
-# Cargar datos
-analyzer = WeatherAnalyzer()
-df = analyzer.load_data(city='Madrid', days=30)
-
-# Calcular estadísticas
-stats = analyzer.temperature_stats(df)
-print(f"Temp. Media: {stats['mean']:.1f}°C")
-print(f"Temp. Máxima: {stats['max']:.1f}°C")
-print(f"Temp. Mínima: {stats['min']:.1f}°C")
-
-# Generar gráfico
-analyzer.plot_temperature_trend(df, save_path='temp_trend.png')
+city = 'Barcelona'  # Cambia a la ciudad que desees
 ```
 
-### Dashboard en Tiempo Real
+### Ejemplo de salida
 
-Accede al dashboard en `http://localhost:3000` para visualizar:
-- Temperatura actual en múltiples ciudades
-- Gráficos de tendencias históricas
-- Alertas de condiciones extremas
-- Comparativas entre ubicaciones
+Si hay lluvia pronosticada:
+```
+100%|████████████████████| 24/24 [00:00<00:00, 48.23it/s]
+SM1234567890abcdef1234567890abcdef
+```
+
+**SMS recibido:**
+```
+Alerta Madrid: Lluvia a las 14, 15, 18 horas
+```
+
+Si no hay lluvia:
+```
+Hoy no va a llover, disfruta del buen clima !
+```
 
 ---
 
-## 🧪 Testing
+## ⚙️ Configuración
+
+### Datos meteorológicos extraídos
+
+El script consulta el pronóstico cada hora (24 horas) y extrae:
+
+- **date**: Fecha del pronóstico
+- **hour**: Hora del día (0-23)
+- **condition**: Descripción del clima
+- **temp_c**: Temperatura en Celsius
+- **will_it_rain**: Si lloverá (0/1)
+- **chance_of_rain**: Probabilidad de lluvia (%)
+
+### Filtros aplicados
+
+- Solo considera lluvia entre **6 AM y 10 PM**
+- Solo envía alerta si `will_it_rain == 1`
+- Ordena las horas de forma ascendente
+
+### Personalización
+
+En `utils.py` puedes modificar:
+
+```python
+# Cambiar el rango de horas
+df_rain = df[(df['will_it_rain']==1) & (df['hour']>6) & (df['hour']< 22)]
+```
+
+---
+
+## 📦 Dependencias
+
+```
+twilio>=8.0.0              # API para enviar SMS
+pandas>=1.5.0              # Procesamiento de datos
+requests>=2.28.0           # Peticiones HTTP
+beautifulsoup4>=4.11.0     # Parsing HTML
+tqdm>=4.64.0               # Barra de progreso
+python-dotenv>=0.21.0      # Variables de entorno
+```
+
+---
+
+## 🔧 Funciones principales
+
+### `request_wapi(api_key, city)`
+Consulta la API de WeatherAPI y obtiene el pronóstico de 24 horas.
+
+### `get_forecast_data(response, i)`
+Extrae los datos meteorológicos de una hora específica.
+
+### `create_df(data)`
+Crea un DataFrame de pandas y filtra las horas con lluvia.
+
+### `send_message(...)`
+Envía el SMS con la alerta de lluvia usando Twilio.
+
+---
+
+## 🚀 Automatización
+
+Para ejecutar automáticamente todos los días:
+
+### Linux/Mac (cron)
 
 ```bash
-# Ejecutar todos los tests
-pytest tests/
+# Editar crontab
+crontab -e
 
-# Con cobertura
-pytest --cov=src tests/
-
-# Tests específicos
-pytest tests/test_extract.py -v
+# Ejecutar todos los días a las 7 AM
+0 7 * * * cd /ruta/al/proyecto && /ruta/al/venv/bin/python twilio_script.py
 ```
+
+### Windows (Task Scheduler)
+
+1. Abre el Programador de tareas
+2. Crea una tarea básica
+3. Configura el trigger (ej: diario a las 7 AM)
+4. Acción: ejecutar `python.exe` con el script como argumento
+
+---
+
+## 💰 Costos
+
+- **WeatherAPI**: Gratis hasta 1M llamadas/mes
+- **Twilio**: 
+  - $15 USD de crédito inicial
+  - ~$0.0075 por SMS (varía según país)
+  - Un SMS diario = ~$0.23/mes
 
 ---
 
 ## 🤝 Contribuciones
 
-Las contribuciones son bienvenidas. Por favor:
+Las contribuciones son bienvenidas:
 
 1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/NuevaFuncionalidad`)
+2. Crea una rama (`git checkout -b feature/mejora`)
 3. Commit tus cambios (`git commit -m 'Add: nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/NuevaFuncionalidad`)
+4. Push a la rama (`git push origin feature/mejora`)
 5. Abre un Pull Request
 
 ---
 
-## 📝 To-Do
+## 📝 Mejoras futuras
 
-- [ ] Integrar más APIs de clima (WeatherAPI, Visual Crossing)
-- [ ] Implementar predicciones con Machine Learning
-- [ ] Añadir soporte para datos históricos (años anteriores)
-- [ ] Crear API REST para consultas
-- [ ] Implementar sistema de cache con Redis
-- [ ] Añadir tests de integración
-- [ ] Dockerizar completamente el proyecto
-- [ ] Crear documentación interactiva con Sphinx
+- [ ] Soporte para múltiples ciudades
+- [ ] Alertas de temperatura extrema
+- [ ] Integración con AWS Lambda para ejecución serverless
+- [ ] Dashboard web simple
+- [ ] Histórico de alertas enviadas
+- [ ] Tests unitarios
 
 ---
 
@@ -361,18 +283,16 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ## 🙏 Agradecimientos
 
-- [OpenWeatherMap](https://openweathermap.org/) por proporcionar la API gratuita
-- Apache Airflow por la orquestación de pipelines
-- La comunidad de Python por las increíbles bibliotecas
+- [WeatherAPI](https://www.weatherapi.com/) por su API gratuita
+- [Twilio](https://www.twilio.com/) por facilitar el envío de SMS
+- Comunidad de Python por las excelentes librerías
 
 ---
 
 <div align="center">
 
-**⭐ Si este proyecto te resulta útil, considera darle una estrella ⭐**
+**⭐ Si te resulta útil, considera darle una estrella ⭐**
 
-[Reportar Bug](https://github.com/mcdatax/Pipeline_weather/issues) •
-[Solicitar Feature](https://github.com/mcdatax/Pipeline_weather/issues) •
-[Contribuir](https://github.com/mcdatax/Pipeline_weather/pulls)
+[Reportar Bug](https://github.com/mcdatax/Pipeline_weather/issues) • [Solicitar Feature](https://github.com/mcdatax/Pipeline_weather/issues)
 
 </div>
