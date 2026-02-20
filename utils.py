@@ -58,7 +58,7 @@ def send_message(TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,input_date,df,city):
     if df.empty:
         mensaje_sms = "Hoy no va a llover, disfruta del buen clima !"
     else: 
-        horas_lluvia = ", ".join(df['hour'].astype(str)) # Convertir las horas a string y unirlas con comas para crear una lista de horas en las que se pronostica lluvia
+        horas_lluvia = ", ".join(df['hour'].astype(str)) # Convertimos las horas a string y unirlas con comas para crear una lista de horas en las que se pronostica lluvia
         mensaje_sms = f"Alerta {city}: Lluvia a las {horas_lluvia} horas" # Crear el mensaje de texto que se enviará, indicando la ciudad y las horas en las que se pronostica lluvia
 
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
