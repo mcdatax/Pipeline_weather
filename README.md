@@ -21,33 +21,6 @@
 
 ---
 
-### 📓 Notebooks
-
-#### **`twilio_messages.ipynb`** - 🚀 Notebook Principal (Trabajo)
-Tu notebook de trabajo donde desarrollas tu proyecto.
-- Mantén aquí solo el código de tu pipeline
-- Limpio y enfocado en avanzar tu proyecto
-- Este es el que subirás a GitHub
-
-#### **`guia_json_requests.ipynb`** - 📚 Notebook de Guía (Referencia)
-Tu guía de consulta rápida para recordar conceptos.
-- Teoría sobre JSON y requests
-- Ejemplos ejecutables con comentarios
-- Mejores prácticas y cheat sheets
-- Consúltalo cuando necesites recordar cómo hacer algo
-- También puedes subirlo a GitHub como documentación
-
----
-
-## 🎯 Flujo de Trabajo Recomendado
-
-1. **Trabaja en:** `twilio_messages.ipynb`
-2. **Consulta cuando necesites:** `guia_json_requests.ipynb`
-3. **Nunca compartas:** `.env` (tus credenciales reales)
-4. **SÍ comparte:** `.env.example`, `.gitignore`, ambos notebooks
-
----
-
 ## 🔄 Regla de Organización
 
 **De ahora en adelante:**
