@@ -1,7 +1,7 @@
 import os
 import warnings
 
-# Suprimir todos los warnings ANTES de importar cualquier librería que los genere
+# Suprimir los warnings ANTES de importar cualquier librería que los genere.
 warnings.filterwarnings('ignore', category=Warning)
 
 from twilio.rest import Client
