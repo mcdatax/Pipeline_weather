@@ -43,9 +43,9 @@ def create_df(data):
     
     cols = ['date', 'hour', 'condition', 'temp_c', 'will_it_rain', 'chance_of_rain'] # Nombres de las columnas para el DataFrame
     df = pd.DataFrame(data, columns=cols) # Crear un DataFrame de pandas a partir de la lista de datos y los nombres de las columnas
-    df = df.sort_values(by = 'hour',ascending = True) # Ordenar el DataFrame por la columna 'hour' en orden ascendente (de menor a mayor)
+    df = df.sort_values(by = 'hour',ascending = True) # Ordenar el DataFrame por la columna "hour" en orden ascendente (de menor a mayor)
     df_rain = df[(df['will_it_rain']==1) & (df['hour']>6) & (df['hour']< 22)] # Filtrar el DataFrame para obtener solo las filas donde 'will_it_rain' es igual a 1 (indica que lloverá) y la hora está entre las 6 AM y las 10 PM
-    df_rain = df_rain[['hour','condition']] # Seleccionar solo las columnas 'hour' y 'condition' del DataFrame filtrado
+    df_rain = df_rain[['hour','condition']] # Seleccionar solo las columnas "hour" y "condition" del DataFrame filtrado
     df_rain.set_index('hour', inplace = True) # Establecer la columna 'hour' como el índice del DataFrame, lo que facilita la visualización y manipulación de los datos relacionados con las horas del día
     
     return df_rain

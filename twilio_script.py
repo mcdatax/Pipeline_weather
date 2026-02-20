@@ -1,7 +1,7 @@
 import os
 import warnings
 
-# Suprimir los warnings ANTES de importar cualquier librería que los genere
+# Suprimir todos los warnings ANTES de importar cualquier librería que los genere
 warnings.filterwarnings('ignore', category=Warning)
 
 from twilio.rest import Client
@@ -18,7 +18,7 @@ from datetime import datetime
 from utils import request_wapi,get_forecast_data,create_df,send_message,get_date
 
 city = 'Madrid' # Puedes cambiar la ciudad por la que quieras consultar el clima
-api_key = API_KEY_WAPI # Puedes obtener tu API key gratuita en https://www.weatherapi.com/
+api_key = API_KEY_WAPI # Puedes obtener tu API key gratuita en https://www.weatherapi.com
 
 input_date= get_date()
 response = request_wapi(api_key,city) 
