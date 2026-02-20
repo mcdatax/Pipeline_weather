@@ -61,14 +61,12 @@ def send_message(TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,input_date,df,city):
         horas_lluvia = ", ".join(df['hour'].astype(str)) # Convertir las horas a string y unirlas con comas para crear una lista de horas en las que se pronostica lluvia
         mensaje_sms = f"Alerta {city}: Lluvia a las {horas_lluvia} horas" # Crear el mensaje de texto que se enviará, indicando la ciudad y las horas en las que se pronostica lluvia
 
-    # client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-    # message = client.messages.create(
-    #    body=mensaje_sms,
-    #    from_=TWILIO_PHONE_NUMBER,
-    #    to=PHONE_NUMBER_DESTINATION
-    #)
+    message = client.messages.create(
+        body=mensaje_sms,
+        from_=TWILIO_PHONE_NUMBER,
+        to=PHONE_NUMBER_DESTINATION
+    )
 
-    #return message.sid
-    mensaje = "mensaje enviado"
-    return mensaje
+    return message.sid
