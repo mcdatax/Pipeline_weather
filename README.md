@@ -37,5 +37,3 @@
 - Mantén tu notebook principal limpio y enfocado en tu proyecto
 
 ---
-
-**¡Buena suerte con tu proyecto! 🚀**
